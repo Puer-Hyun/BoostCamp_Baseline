@@ -1,0 +1,3 @@
+*.lock
+data
+.pre-commit-config.yaml
