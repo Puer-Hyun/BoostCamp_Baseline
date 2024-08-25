@@ -16,6 +16,7 @@ pandas = "^2.2.2"
 pillow = "^10.4.0"
 requests = "^2.32.3"
 dvc = "^3.54.1"
+pytest = "^8.3.2"
 
 
 [tool.poetry.group.dev.dependencies]

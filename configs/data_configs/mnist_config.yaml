@@ -1,0 +1,9 @@
+# configs/data_configs/mnist_config.yaml
+data:
+  name: MNIST
+  raw_data_path: data/raw/MNIST/raw
+  processed_data_path: data/processed/MNIST
+  train_val_split: 0.8
+  batch_size: 64
+  num_workers: 4
+  pin_memory: true
