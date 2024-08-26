@@ -2,3 +2,4 @@
 data/raw
 .pre-commit-config.yaml
 *.pyc
+lightning_logs/
