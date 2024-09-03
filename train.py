@@ -22,8 +22,9 @@ def main(config_path, use_wandb=False):
     # 데이터 모듈 설정
     data_config_path = config.data_config_path
     augmentation_config_path = config.augmentation_config_path
-    data_module = DataModuleClass(data_config_path, augmentation_config_path)
-    data_module.setup()  # 데이터 모듈에는 setupd이라는 메소드가 존재한다.
+    seed = config.get("seed", 42)  # 시드 값을 설정 파일에서 읽어오거나 기본값 42 사용
+    data_module = DataModuleClass(data_config_path, augmentation_config_path, seed)
+    data_module.setup()  # 데이터 모듈에는 setup이라는 메소드가 존재한다.
 
     # 모델 모듈 동적 임포트
     model_module_path, model_module_class = config.model_module.rsplit(".", 1)

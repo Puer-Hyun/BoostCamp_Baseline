@@ -11,9 +11,10 @@ from src.utils.data_utils import load_yaml_config
 
 
 class MNISTDataModule(BaseDataModule):
-    def __init__(self, data_config_path: str, augmentation_config_path: str):
+    def __init__(self, data_config_path: str, augmentation_config_path: str, seed: int):
         self.data_config = load_yaml_config(data_config_path)
         self.augmentation_config = load_yaml_config(augmentation_config_path)
+        self.seed = seed  # TODO
         super().__init__(self.data_config)
 
     def setup(self, stage: Optional[str] = None):
@@ -57,6 +58,7 @@ class MNISTDataModule(BaseDataModule):
             num_workers=self.config["data"]["num_workers"],
             shuffle=True,
             collate_fn=mnist_collate_fn,
+            persistent_workers=True,
         )
 
     def val_dataloader(self):
@@ -66,6 +68,7 @@ class MNISTDataModule(BaseDataModule):
             num_workers=self.config["data"]["num_workers"],
             shuffle=False,
             collate_fn=mnist_collate_fn,
+            persistent_workers=True,
         )
 
     def test_dataloader(self):
@@ -75,6 +78,7 @@ class MNISTDataModule(BaseDataModule):
             num_workers=self.config["data"]["num_workers"],
             shuffle=False,
             collate_fn=mnist_collate_fn,
+            persistent_workers=True,
         )
 
     def _get_augmentation_transforms(self):

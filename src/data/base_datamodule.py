@@ -23,6 +23,7 @@ class BaseDataModule(pl.LightningDataModule):
             num_workers=self.config["num_workers"],
             pin_memory=self.config["pin_memory"],
             shuffle=True,
+            persistent_workers=True,
         )
 
     def val_dataloader(self):
@@ -31,6 +32,7 @@ class BaseDataModule(pl.LightningDataModule):
             batch_size=self.config["batch_size"],
             num_workers=self.config["num_workers"],
             pin_memory=self.config["pin_memory"],
+            persistent_workers=True,
         )
 
     def test_dataloader(self):
@@ -39,4 +41,5 @@ class BaseDataModule(pl.LightningDataModule):
             batch_size=self.config["batch_size"],
             num_workers=self.config["num_workers"],
             pin_memory=self.config["pin_memory"],
+            persistent_workers=True,
         )
