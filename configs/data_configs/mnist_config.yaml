@@ -4,6 +4,7 @@ data:
   raw_data_path: data/raw/MNIST/raw
   processed_data_path: data/processed/MNIST
   train_val_split: 0.8
+  val_test_split: 0.7
   batch_size: 64
-  num_workers: 4
+  num_workers: 11
   pin_memory: true

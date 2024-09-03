@@ -18,6 +18,7 @@ requests = "^2.32.3"
 dvc = "^3.54.1"
 pytest = "^8.3.2"
 torchmetrics = "^1.4.1"
+wandb = "^0.17.8"
 
 
 [tool.poetry.group.dev.dependencies]

@@ -1,7 +1,12 @@
 import pytorch_lightning as pl
 import torch
 import torch.nn.functional as F
-from torchmetrics.classification import MulticlassPrecision, MulticlassRecall
+from pytorch_lightning.loggers import WandbLogger
+from torchmetrics.classification import (
+    MulticlassF1Score,
+    MulticlassPrecision,
+    MulticlassRecall,
+)
 
 from src.models.base_model import BaseModel
 
@@ -13,6 +18,8 @@ class MNISTModelModule(pl.LightningModule):
         self.model = BaseModel(config.model)
         self.precision = MulticlassPrecision(num_classes=10, average="macro")
         self.recall = MulticlassRecall(num_classes=10, average="macro")
+        self.f1_score = MulticlassF1Score(num_classes=10, average="macro")
+        self.wandb_logger = WandbLogger(project="MNIST", name="MNIST_TEST")
 
     def forward(self, x):
         return self.model(x)
@@ -22,6 +29,9 @@ class MNISTModelModule(pl.LightningModule):
         y_hat = self.forward(x)
         loss = F.cross_entropy(y_hat, y)
         self.log("train_loss", loss)
+        self.log("train_precision", self.precision(y_hat, y))
+        self.log("train_recall", self.recall(y_hat, y))
+        self.log("train_f1_score", self.f1_score(y_hat, y))
         return loss
 
     def validation_step(self, batch, batch_idx):
@@ -31,6 +41,7 @@ class MNISTModelModule(pl.LightningModule):
         self.log("val_loss", loss)
         self.log("val_precision", self.precision(y_hat, y))
         self.log("val_recall", self.recall(y_hat, y))
+        self.log("val_f1_score", self.f1_score(y_hat, y))
         return loss
 
     def test_step(self, batch, batch_idx):
@@ -40,6 +51,7 @@ class MNISTModelModule(pl.LightningModule):
         self.log("test_loss", loss)
         self.log("test_precision", self.precision(y_hat, y))
         self.log("test_recall", self.recall(y_hat, y))
+        self.log("test_f1_score", self.f1_score(y_hat, y))
         return loss
 
     def predict_step(self, batch, batch_idx):

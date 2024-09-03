@@ -32,3 +32,5 @@ callbacks:
     monitor: val_loss
     patience: 5
     mode: min
+
+seed: 42  # 시드 값 추가

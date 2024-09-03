@@ -17,7 +17,9 @@ class MNISTDataModule(BaseDataModule):
         super().__init__(self.data_config)
 
     def setup(self, stage: Optional[str] = None):
-        # Define transforms
+        # 시드 설정
+        torch.manual_seed(self.seed)
+
         if self.augmentation_config["augmentation"]["use_augmentation"]:
             train_transforms = self._get_augmentation_transforms()
         else:
@@ -52,6 +54,7 @@ class MNISTDataModule(BaseDataModule):
         return torch.utils.data.DataLoader(
             self.train_dataset,
             batch_size=self.config["data"]["batch_size"],
+            num_workers=self.config["data"]["num_workers"],
             shuffle=True,
             collate_fn=mnist_collate_fn,
         )
@@ -60,6 +63,7 @@ class MNISTDataModule(BaseDataModule):
         return torch.utils.data.DataLoader(
             self.val_dataset,
             batch_size=self.config["data"]["batch_size"],
+            num_workers=self.config["data"]["num_workers"],
             shuffle=False,
             collate_fn=mnist_collate_fn,
         )
@@ -68,6 +72,7 @@ class MNISTDataModule(BaseDataModule):
         return torch.utils.data.DataLoader(
             self.test_dataset,
             batch_size=self.config["data"]["batch_size"],
+            num_workers=self.config["data"]["num_workers"],
             shuffle=False,
             collate_fn=mnist_collate_fn,
         )
