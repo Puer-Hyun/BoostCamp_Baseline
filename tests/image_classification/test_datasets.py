@@ -4,8 +4,11 @@ from PIL import Image
 import pytest
 import numpy as np
 
-sys.path.append("../src")
-from src.data.datasets.cv_level1_dataset import CV_Level1_Dataset  # noqa: E402
+sys.path.append("../../src")
+from src.data.datasets.cv_level1_dataset import (  # noqa: E402
+    CV_Level1_Dataset,
+    CV_Level1_TestDataset,
+)
 
 
 @pytest.fixture

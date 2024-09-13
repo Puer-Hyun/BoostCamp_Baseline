@@ -1,0 +1,11 @@
+# configs/augmentation_configs/mnist_augmentation.yaml
+augmentation:
+  use_augmentation: true
+  transforms:
+    - name: "HorizontalFlip"
+      params:
+        p: 0.5
+    - name: "Rotate"
+      params:
+        limit: 15
+        p: 0.5
