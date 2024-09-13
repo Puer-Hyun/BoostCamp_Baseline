@@ -5,3 +5,5 @@ data/raw
 lightning_logs/
 *.ckpt
 wandb
+data/boostcamp_task1
+*.ipynb
