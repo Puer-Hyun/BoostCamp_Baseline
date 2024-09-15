@@ -1,13 +1,13 @@
 data:
-  csv_file_path: /Users/seonghyunpark/Desktop/BoostCamp_Baseline/data/boostcamp_task1/data/train.csv
-  image_dir_path: /Users/seonghyunpark/Desktop/BoostCamp_Baseline/data/boostcamp_task1/data/train
-  predict_image_dir_path: /Users/seonghyunpark/Desktop/BoostCamp_Baseline/data/boostcamp_task1/data/test
+  csv_file_path: data/boostcamp_task1/train.csv
+  image_dir_path: data/boostcamp_task1/train
+  predict_image_dir_path: data/boostcamp_task1/test
   train_val_split: 0.8
   val_test_split: 0.7
   pin_memory: true
   train:
     batch_size: 64
-    num_workers: 11
+    num_workers: 21
     shuffle: true
   val:
     batch_size: 32

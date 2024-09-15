@@ -1,16 +1,18 @@
-data_module: "src.data.custom_datamodules.image_classification.imageclassfication_datamodule.ImageClassificationDataModule"
+data_module: "src.data.custom_datamodules.image_classification.imageclassification_datamodule.ImageClassificationDataModule"
 model_module: "src.plmodules.image_classification.image_classification_module.ImageClassificationModule"
 
-data_config_path: "/Users/seonghyunpark/Desktop/BoostCamp_Baseline/configs/data_configs/image_classification_contest.yaml"
-augmentation_config_path: "/Users/seonghyunpark/Desktop/BoostCamp_Baseline/configs/augmentation_configs/image_classification.yaml"
+data_config_path: "configs/data_configs/image_classification_contest.yaml"
+augmentation_config_path: "configs/augmentation_configs/image_classification.yaml"
 
 model:
-  lr: 0.001
+  lr: 0.1
+  in_channels: 3
+  num_classes: 500
 
 optimizer:
   name: Adam
   params:
-    lr: 0.001
+    lr: 0.1
 
 scheduler:
   name: StepLR
@@ -19,7 +21,7 @@ scheduler:
     gamma: 0.7
 
 trainer:
-  max_epochs: 50
+  max_epochs: 100
   accelerator: gpu
   devices: 1
 
@@ -30,7 +32,7 @@ callbacks:
     mode: min
   early_stopping:
     monitor: val_loss
-    patience: 5
+    patience: 15
     mode: min
 
 seed: 42  # 시드 값 추가

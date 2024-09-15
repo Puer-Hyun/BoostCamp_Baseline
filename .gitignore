@@ -7,3 +7,17 @@ lightning_logs/
 wandb
 data/boostcamp_task1
 *.ipynb
+*.zip
+.DS_Store
+.env
+*.gz
+*.JPEG
+*.png
+*.jpg
+*.jpeg
+*.csv
+*.yaml
+*.json
+*.pth
+*.pt
+data

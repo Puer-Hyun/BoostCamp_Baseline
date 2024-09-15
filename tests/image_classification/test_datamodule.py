@@ -1,30 +1,35 @@
+# 프로젝트 루트를 Python 경로에 추가
+import sys
 import pytest
 import torch
 from omegaconf import OmegaConf
-import sys
+from pathlib import Path
+import os
+import torchvision.utils as vutils
+import numpy as np
 
-sys.path.append("/Users/seonghyunpark/Desktop/BoostCamp_Baseline")
-from src.data.custom_datamodules.image_classification.imageclassification_datamodule import (  # noqa: E402, E501
+# 환경 변수 로드
+from src.utils.path_utils import load_env_vars
+
+load_env_vars()
+
+sys.path.append(os.environ["PROJECT_ROOT"])
+
+from src.data.custom_datamodules.image_classification.imageclassification_datamodule import (  # noqa : E402, E501
     ImageClassificationDataModule,
 )
 
 
 @pytest.fixture
 def data_config():
+    project_root = Path(os.environ["PROJECT_ROOT"])
     return OmegaConf.create(
         {
             "data": {
-                "csv_file_path": (
-                    "/Users/seonghyunpark/Desktop/BoostCamp_Baseline/"
-                    "data/boostcamp_task1/data/train.csv"
-                ),
-                "image_dir_path": (
-                    "/Users/seonghyunpark/Desktop/BoostCamp_Baseline/"
-                    "data/boostcamp_task1/data/train"
-                ),
-                "predict_dir_path": (
-                    "/Users/seonghyunpark/Desktop/BoostCamp_Baseline/"
-                    "data/boostcamp_task1/data/test"
+                "csv_file_path": str(project_root / "data/boostcamp_task1/train.csv"),
+                "image_dir_path": str(project_root / "data/boostcamp_task1/train"),
+                "predict_image_dir_path": str(
+                    project_root / "data/boostcamp_task1/test"
                 ),
                 "train_val_split": 0.8,
                 "val_test_split": 0.7,
@@ -54,14 +59,14 @@ def augmentation_config():
 
 
 def test_image_classification_datamodule(data_config, augmentation_config):
+    project_root = Path(os.environ["PROJECT_ROOT"])
+
     data_module = ImageClassificationDataModule(
-        data_config_path=(
-            "/Users/seonghyunpark/Desktop/BoostCamp_Baseline/"
-            "configs/data_configs/image_classification_contest.yaml"
+        data_config_path=str(
+            project_root / "configs/data_configs/image_classification_contest.yaml"
         ),
-        augmentation_config_path=(
-            "/Users/seonghyunpark/Desktop/BoostCamp_Baseline/"
-            "configs/augmentation_configs/image_classification.yaml"
+        augmentation_config_path=str(
+            project_root / "configs/augmentation_configs/image_classification.yaml"
         ),
         seed=42,
     )
@@ -101,6 +106,37 @@ def test_image_classification_datamodule(data_config, augmentation_config):
     assert len(batch) == 2  # (images, labels)
     assert isinstance(batch[0], torch.Tensor)  # images
     assert isinstance(batch[1], torch.Tensor)  # labels
+
+    # 이미지와 라벨 값 확인
+    images, labels = batch
+    assert images.shape == (
+        data_config.data.train.batch_size,
+        3,
+        480,
+        480,
+    )  # 이미지 크기 확인 (채널, 높이, 너비)
+    assert labels.shape == (data_config.data.train.batch_size,)  # 라벨 shape 확인
+    assert (
+        labels.min() >= 0 and labels.max() < 500
+    )  # 라벨 값 범위 확인 (0~499, 500개 클래스 가정)
+
+    # 이미지 저장
+    save_path = Path("/data/seonghyun/BoostCamp_Baseline/visualization_example")
+    save_path.mkdir(parents=True, exist_ok=True)
+
+    # 배치의 이미지를 그리드로 만들어 저장
+    grid = vutils.make_grid(images[:16], nrow=4, normalize=True, padding=2)
+    vutils.save_image(grid, str(save_path / "batch_images.png"))
+
+    # 개별 이미지 저장 (첫 5개만)
+    for i in range(min(10, len(images))):
+        img = images[i].cpu().numpy().transpose(1, 2, 0)  # CHW -> HWC
+        img = (img * 255).astype(np.uint8)
+        vutils.save_image(
+            images[i], str(save_path / f"image_{i}_label_{labels[i].item()}.png")
+        )
+
+    print(f"이미지가 {save_path}에 저장되었습니다.")
 
     # predict 데이터셋 확인
     predict_batch = next(iter(predict_loader))
